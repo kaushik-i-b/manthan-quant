@@ -1,0 +1,52 @@
+{
+  "openapi": "3.0.3",
+  "info": {"title": "unit-test-spec-not-the-competition-api", "version": "0"},
+  "paths": {
+    "/orders": {
+      "post": {
+        "summary": "Submit an order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["symbol", "side", "qty"],
+                "properties": {
+                  "symbol": {"type": "string"},
+                  "side": {"type": "string"},
+                  "qty": {"type": "integer"},
+                  "note": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "ok"}, "400": {"description": "bad"}}
+      }
+    },
+    "/portfolio": {
+      "get": {
+        "summary": "Read the book",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["cash"],
+                  "properties": {"cash": {"type": "number"}, "positions": {"type": "array"}}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {"bearerAuth": {"type": "http", "scheme": "bearer"}},
+    "schemas": {}
+  },
+  "security": [{"bearerAuth": []}]
+}

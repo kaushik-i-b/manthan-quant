@@ -45,7 +45,16 @@ cd frontend && npm test
 make probe
 ```
 
-From this environment the private address `192.168.65.157` is not reachable. Do not enable live orders until the official PDFs confirm:
+From this environment the private address `192.168.65.157` is not reachable. On the venue Wi-Fi, extract the portal contracts without putting the password in a file:
+
+```bash
+pip install -r scripts/requirements-portal.txt
+python -m playwright install chromium
+export MANTHAN_PORTAL_PASSWORD='...'
+make extract-portal
+```
+
+The script writes `var/portal-extract/` and does not submit orders. Do not enable live orders until that extract confirms:
 
 - heartbeat JSON
 - order JSON

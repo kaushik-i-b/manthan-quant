@@ -1,6 +1,10 @@
 # API contracts
 
-## Venue routes that exist in the brief
+Portal extraction on 29 October 2026 did not reach `http://192.168.65.157:3003` from this machine (HTTP timed out after 5 seconds; TCP connect to ports 3003, 3002, and 9094 failed). `MANTHAN_PORTAL_PASSWORD` was not set. No request or response schema below is portal-verified. See `docs/api-discovery-report.md`.
+
+Paths named in the build brief stay fail-closed until `scripts/extract_portal_contracts.py` saves an OpenAPI document on the venue network. The dry-run simulator does not call them.
+
+## Venue routes that exist in the build brief
 
 The client can call only:
 

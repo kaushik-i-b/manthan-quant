@@ -40,3 +40,6 @@ yarn-error.log*
 # Local agent scratch
 agent-tools/
 tmp-scaffold/
+
+# Portal extraction may contain session-adjacent page text. Review before sharing.
+var/portal-extract/

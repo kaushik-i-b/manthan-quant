@@ -1,7 +1,7 @@
 PY=backend/.venv/bin
 ENGINE?=http://127.0.0.1:8741
 
-.PHONY: install test backend frontend demo probe
+.PHONY: install test backend frontend demo probe extract-portal
 
 install:
 	python3 -m venv backend/.venv
@@ -23,3 +23,6 @@ demo:
 
 probe:
 	$(PY)/python scripts/check_venue.py
+
+extract-portal:
+	$(PY)/python scripts/extract_portal_contracts.py
