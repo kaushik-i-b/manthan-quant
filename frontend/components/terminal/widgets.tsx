@@ -49,7 +49,13 @@ export function Kpi({
 
 export function Lamp({ lamp }: { lamp: string }) {
   const color =
-    lamp === "LIVE" ? "bg-[#10B981]" : lamp === "PAUSED" ? "bg-[#F59E0B]" : lamp === "PREFLIGHT" ? "bg-[#22D3EE]" : "bg-[#EF4444]";
+    lamp === "LIVE"
+      ? "bg-[#10B981]"
+      : lamp === "PAUSED" || lamp === "ENDED"
+        ? "bg-[#F59E0B]"
+        : lamp === "PREFLIGHT" || lamp === "LINKING"
+          ? "bg-[#22D3EE]"
+          : "bg-[#EF4444]";
   return (
     <div className="flex items-center gap-2 rounded-full border border-[#334155] bg-[#1E293B] px-3 py-1.5">
       <span className={cn("size-2.5 rounded-full", color, lamp === "LIVE" && "animate-pulse")} />

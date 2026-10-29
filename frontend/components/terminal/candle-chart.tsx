@@ -39,7 +39,10 @@ export function CandleChart({ candles, ticker, origin }: Props) {
       grid: { vertLines: { color: "#1E293B" }, horzLines: { color: "#1E293B" } },
       crosshair: { mode: CrosshairMode.Normal },
       rightPriceScale: { borderColor: "#334155" },
-      timeScale: { borderColor: "#334155" },
+      timeScale: {
+        borderColor: "#334155",
+        tickMarkFormatter: (time: number) => `D${Math.round((Number(time) - origin) / 86400)}`,
+      },
       localization: {
         timeFormatter: (time: number) => `Day ${Math.round((Number(time) - origin) / 86400)}`,
       },
