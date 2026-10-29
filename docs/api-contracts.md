@@ -1,22 +1,42 @@
 # API contracts
 
-Portal extraction on 29 October 2026 did not reach `http://192.168.65.157:3003` from this machine (HTTP timed out after 5 seconds; TCP connect to ports 3003, 3002, and 9094 failed). `MANTHAN_PORTAL_PASSWORD` was not set. No request or response schema below is portal-verified. See `docs/api-discovery-report.md`.
+The participant portal API reference page was read from an uploaded screenshot dated 10/29/26, 10:49 PM. Paths and the identifiers printed on that page are VERIFIED. JSON bodies were not shown, so they stay unresolved. The private network was not contacted. No order was submitted.
 
-Paths named in the build brief stay fail-closed until `scripts/extract_portal_contracts.py` saves an OpenAPI document on the venue network. The dry-run simulator does not call them.
+## VERIFIED paths
 
-## Venue routes that exist in the build brief
+The client base URL is `http://192.168.65.157:3002/api/v1` from the build brief. The page prints these paths:
 
-The client can call only:
+| Method | Path | What the page says | Schema |
+| --- | --- | --- | --- |
+| POST | `/api/v1/orders` | BUY, SELL, SHORT, COVER market order. Optional `date` is the decision market date and does not change the fill price. | unresolved |
+| GET | `/api/v1/orders` | Audit log, fill prices, rejection reasons, timestamps. | unresolved |
+| GET | `/api/v1/portfolio` | Cash, long and short holdings, mark-to-market, realized and unrealized P&L. Short `quantity` is negative, `is_short` is true, `market_value` is a negative liability (`quantity × current_price`). `unrealized_pnl` is named; the rest of that sentence was cut off. | unresolved |
+| GET | `/api/v1/portfolio/cash` | Cash balance for position sizing. | unresolved |
+| GET | `/api/v1/stocks` | Tradable universe during READY and PRE-FLIGHT: ticker, masked company name, short description. Do not hardcode tickers. | unresolved |
+| GET | `/api/v1/stocks/history` | Daily OHLCV, up to 10 years, default strictly before the simulation date. Query `ticker`, `start_date`, `end_date`, or `days`. An early range errors with the listing date. | unresolved |
+| GET | `/api/v1/simulation/clock` | Current day, total days, remaining days, interval speed, simulated date. | unresolved |
+| GET | `/api/v1/stage` | Stage, active database, progress. Labels named: development, ready, preflight, simulation. Which label allows orders is unresolved. | unresolved |
+| POST | `/api/v1/bot/heartbeat` | Acknowledge the pre-flight Kafka ping `seq`. | unresolved |
 
-- `GET /api/v1/stocks`
-- `GET /api/v1/stocks/{ticker}/history`
-- `GET /api/v1/stage`
-- `POST /api/v1/bot/heartbeat`
-- `POST /api/v1/orders`
+Historical bars are `GET /api/v1/stocks/history?ticker=`, not `/api/v1/stocks/{ticker}/history`.
 
-GET requests may retry on timeout, network errors, HTTP 429, and HTTP 5xx (two retries, exponential backoff). `POST /orders` is never retried.
+## Still needed before a live bot
 
-Authorization is `Bearer $BOT_ACCESS_TOKEN`. The token is redacted in logs and is not sent to the browser.
+- JSON request body for `POST /orders` besides the optional `date` name
+- JSON body for `POST /bot/heartbeat` besides the name `seq`
+- Response JSON for every GET, including cash, clock, stocks, history, stage, and orders
+- Which stage value permits orders
+- Whether the bot sends `Cookie: access_token=...` or `Authorization: Bearer ...`
+- Kafka topic payloads, consumer group, and the heartbeat `seq` message
+- Brokerage, DP charges, tax, short collateral, and square-off
+
+`DRY_RUN` stays true and `TRADING_ENABLED` stays false. The engine will not build those bodies.
+
+## Client behavior
+
+The client can call the nine paths in the table above. History is `GET /stocks/history` with the printed query names. GET requests may retry on timeout, network errors, HTTP 429, and HTTP 5xx (two retries, exponential backoff). `POST /orders` is never retried.
+
+The portal console authenticates with a cookie named `access_token`. Whether the bot uses that cookie or `Authorization: Bearer` is unresolved. A configured `BOT_ACCESS_TOKEN` is still sent as a bearer header by the existing client and is redacted in logs. It is not sent to the browser. Order and heartbeat bodies are still refused unless an operator supplies a template file.
 
 ## Templates
 

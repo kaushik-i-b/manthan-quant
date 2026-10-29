@@ -57,6 +57,7 @@ class TradingApiClient:
         path: str,
         *,
         json_body: dict | None = None,
+        params: dict | None = None,
         idempotent: bool,
     ) -> httpx.Response:
         delay = 0.05
@@ -78,7 +79,9 @@ class TradingApiClient:
                 attempt=attempt,
             )
             try:
-                response = await self._client.request(method, path, json=json_body, headers=headers)
+                response = await self._client.request(
+                    method, path, json=json_body, params=params, headers=headers
+                )
             except httpx.TimeoutException as exc:
                 if idempotent and attempt < 2:
                     attempt += 1
@@ -111,8 +114,39 @@ class TradingApiClient:
         response = await self.request("GET", "/stocks", idempotent=True)
         return response.json()
 
-    async def get_history(self, ticker: str) -> Any:
-        response = await self.request("GET", f"/stocks/{ticker}/history", idempotent=True)
+    async def get_history(
+        self,
+        ticker: str,
+        *,
+        start_date: str | None = None,
+        end_date: str | None = None,
+        days: int | None = None,
+    ) -> Any:
+        """GET /stocks/history. Query names are the ones printed on the portal page."""
+        params: dict[str, str | int] = {"ticker": ticker}
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        if days is not None:
+            params["days"] = days
+        response = await self.request("GET", "/stocks/history", params=params, idempotent=True)
+        return response.json()
+
+    async def get_orders(self) -> Any:
+        response = await self.request("GET", "/orders", idempotent=True)
+        return response.json()
+
+    async def get_portfolio(self) -> Any:
+        response = await self.request("GET", "/portfolio", idempotent=True)
+        return response.json()
+
+    async def get_portfolio_cash(self) -> Any:
+        response = await self.request("GET", "/portfolio/cash", idempotent=True)
+        return response.json()
+
+    async def get_simulation_clock(self) -> Any:
+        response = await self.request("GET", "/simulation/clock", idempotent=True)
         return response.json()
 
     async def get_stage(self) -> Any:

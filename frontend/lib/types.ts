@@ -193,6 +193,31 @@ export type Snapshot = {
   };
   audit: { ts: string; event_type: string; payload: Record<string, unknown> }[];
   milestones: Record<string, boolean>;
+  portal?: {
+    source_document: string;
+    bot_auth: string;
+    portal_console_auth: string;
+    schema_status: string;
+    history_path: string;
+    endpoints: string[];
+    clock: {
+      path: string;
+      schema_status: string;
+      documented_concepts: string[];
+      local_simulator: {
+        sim_day: number;
+        total_days: number;
+        remaining_days: number;
+        interval_seconds: number;
+      };
+    };
+    cash: {
+      path: string;
+      schema_status: string;
+      documented_concepts: string[];
+      local_simulator_cash: number;
+    };
+  };
   news: {
     event_id: string;
     ticker: string;

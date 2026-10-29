@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Empty, Kpi, LoadingBlock, Panel } from "@/components/terminal/widgets";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formatIst } from "@/lib/format";
+import { formatIst, inr } from "@/lib/format";
 import { useDesk } from "@/lib/store";
 import { cn } from "cn";
 
@@ -45,6 +45,27 @@ export default function ExecutionPage() {
         <h1 className="text-2xl font-semibold tracking-tight">Execution monitor</h1>
         <p className="text-sm text-[#94A3B8]">{health.rate_limit.note}</p>
       </div>
+      {snapshot.portal ? (
+        <Panel title="Portal contracts">
+          <p className="text-sm text-[#F59E0B]">
+            JSON schemas are unresolved. Bot authentication is {snapshot.portal.bot_auth}. The portal console uses {snapshot.portal.portal_console_auth}.
+          </p>
+          <div className="mt-3 grid gap-3 md:grid-cols-2">
+            <div className="rounded-lg bg-[#0B1220] px-3 py-2 text-sm">
+              <div className="text-xs text-[#94A3B8]">{snapshot.portal.clock.path}</div>
+              <p className="mt-1 text-[#F8FAFC]">
+                Local analog day {snapshot.portal.clock.local_simulator.sim_day} of {snapshot.portal.clock.local_simulator.total_days}, {snapshot.portal.clock.local_simulator.remaining_days} remaining, {snapshot.portal.clock.local_simulator.interval_seconds}s interval.
+              </p>
+              <p className="mt-1 text-xs text-[#94A3B8]">Documented concepts: {snapshot.portal.clock.documented_concepts.join(", ")}. These local numbers are not a portal response.</p>
+            </div>
+            <div className="rounded-lg bg-[#0B1220] px-3 py-2 text-sm">
+              <div className="text-xs text-[#94A3B8]">{snapshot.portal.cash.path}</div>
+              <p className="mt-1 text-[#F8FAFC]">Local cash {inr(snapshot.portal.cash.local_simulator_cash)}</p>
+              <p className="mt-1 text-xs text-[#94A3B8]">History is {snapshot.portal.history_path}. The cash JSON field name was not printed.</p>
+            </div>
+          </div>
+        </Panel>
+      ) : null}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Kpi label="Submitted / filled" value={String(count("FILLED"))} hint={`${orders.length} visible order rows`} />
         <Kpi label="Rejected" value={String(count("REJECTED"))} tone={count("REJECTED") ? -1 : 0} />

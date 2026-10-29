@@ -13,7 +13,7 @@ The files `Hackathon_Problem_Statement.pdf` and `Beginners_Guide_to_Trading_and_
 | Starting capital | INR 1,000,000 |
 | Cadence | about 3–4 real seconds per simulated day |
 | News lag | about 150 ms after ticks |
-| Documented routes | `GET /stocks`, `GET /stocks/:ticker/history`, `GET /stage`, `POST /bot/heartbeat`, `POST /orders` |
+| Documented routes | Portal page: `POST /orders`, `GET /orders`, `GET /portfolio`, `GET /portfolio/cash`, `GET /stocks`, `GET /stocks/history`, `GET /simulation/clock`, `GET /stage`, `POST /bot/heartbeat` |
 | Actions named | `BUY`, `SELL`, `SHORT`, `COVER` |
 | Rate limit | 120 requests / minute |
 | Heartbeat | at least every 15 seconds |

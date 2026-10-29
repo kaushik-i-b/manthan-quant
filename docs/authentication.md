@@ -8,17 +8,17 @@ The password is only `MANTHAN_PORTAL_PASSWORD` in the environment. The extractor
 
 ## Trading API
 
-The build brief says the trading API uses a bearer token. The engine reads it from `BOT_ACCESS_TOKEN` on the server. Logs pass through `redact` in `backend/app/api/auth.py` and the JSON log formatter, which replaces bearer values and password fields.
+The portal's interactive console says requests use the active session token from `document.cookie`. The page labels that control COOKIE AUTH and shows a cookie named `access_token`. The token value in the screenshot was truncated and is not stored here.
 
-The token is not a frontend environment variable. The desk talks to the local engine. Pause and resume use `CONTROL_TOKEN`, which is a local control secret, not the venue token.
+The page does not say whether a bot must send that cookie, an `Authorization: Bearer` header, or both. The build brief said bearer. Those two statements are not resolved. `bot_auth` in the desk snapshot stays `unresolved`. `BOT_ACCESS_TOKEN` remains a server-only setting and is redacted in logs. The desk does not receive it.
 
-No portal session cookie and no access token were captured on 29 October 2026. Header names beyond `Authorization: Bearer` were not confirmed.
+Pause and resume use `CONTROL_TOKEN`, a local control secret, not the venue token.
 
 ## Status
 
 | Item | Status |
 | --- | --- |
-| Portal password handling | VERIFIED as an environment variable in the extractor. Login itself was not run |
-| Bearer header for the trading API | INFERRED from the build brief |
+| Portal console cookie name `access_token` | VERIFIED from the API reference screenshot |
+| Bot transport (cookie versus bearer) | unresolved |
 | Token endpoint, expiry, and refresh | MISSING |
 | Kafka authentication | MISSING |

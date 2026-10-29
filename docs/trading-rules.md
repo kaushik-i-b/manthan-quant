@@ -15,7 +15,17 @@ The portal and both PDFs were unavailable during this extraction. Nothing in thi
 | Heartbeat | at least every 15 seconds |
 | Shorts | collateral and a mandatory square-off exist |
 
-## MISSING from the portal
+## VERIFIED from the portal API reference screenshot
+
+- Order actions named on the page: BUY, SELL, SHORT, COVER. They are market orders.
+- SHORT credits cash and stores a negative quantity. COVER realizes `(Short Price - Cover Price) x Shares`.
+- Optional order attribute `date` records the decision market date and does not change the execution price.
+- History defaults to daily OHLCV strictly before the current simulation date.
+- Stage labels named on the page: development, ready, preflight, simulation. Which one allows orders is unresolved.
+- Heartbeat acknowledges a Kafka pre-flight ping called `seq`. The message schema is unresolved.
+- The stock list is available during READY and PRE-FLIGHT, before the first tick.
+
+## MISSING from the portal screenshot
 
 - Collateral ratio
 - Square-off schedule

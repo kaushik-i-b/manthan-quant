@@ -33,20 +33,25 @@ python scripts/extract_portal_contracts.py
 
 The script writes `var/portal-extract/`, which is gitignored. It redacts lines that look like passwords, bearer tokens, or cookies. It does not submit orders. If it finds an OpenAPI or Swagger JSON document, that file can be converted with `catalog_from_openapi` in `backend/app/api/models.py`. Prose pages are saved as text and are not turned into field lists.
 
-Until that file exists, every contract below is MISSING and the engine will not build a venue payload from a guessed schema.
+A later uploaded screenshot of the portal API reference supplied the path inventory below. JSON bodies are still unresolved, so the engine still will not build a venue payload.
 
-## Endpoint inventory
+## Endpoint inventory from the uploaded portal screenshot
 
-| Method | Path | Status | Source |
-| --- | --- | --- | --- |
-| GET | `/api/v1/stocks` | INFERRED from the build brief only | not the portal |
-| GET | `/api/v1/stocks/{ticker}/history` | INFERRED from the build brief only | not the portal |
-| GET | `/api/v1/stage` | INFERRED from the build brief only | not the portal |
-| POST | `/api/v1/bot/heartbeat` | INFERRED from the build brief only | body MISSING |
-| POST | `/api/v1/orders` | INFERRED from the build brief only | body MISSING |
-| Portfolio, cash, holdings, order history, order status | not named with a path in the brief | MISSING | portal unread |
+The page "API REFERENCE & INTERACTIVE CONSOLE" lists nine endpoints. Paths are VERIFIED. JSON schemas are unresolved. The earlier guess `GET /api/v1/stocks/{ticker}/history` is withdrawn.
 
-Request fields, response fields, status codes, and examples for every row are MISSING.
+| Method | Path | Schema |
+| --- | --- | --- |
+| POST | `/api/v1/orders` | unresolved; optional identifier `date` is named |
+| GET | `/api/v1/orders` | unresolved |
+| GET | `/api/v1/portfolio` | unresolved; `quantity`, `is_short`, `market_value`, `unrealized_pnl` are named |
+| GET | `/api/v1/portfolio/cash` | unresolved |
+| GET | `/api/v1/stocks` | unresolved |
+| GET | `/api/v1/stocks/history` | unresolved; query names `ticker`, `start_date`, `end_date`, `days` are VERIFIED |
+| GET | `/api/v1/simulation/clock` | unresolved |
+| GET | `/api/v1/stage` | unresolved; labels development, ready, preflight, simulation are named |
+| POST | `/api/v1/bot/heartbeat` | unresolved; identifier `seq` is named |
+
+No expanded OpenAPI operation, example body, or status-code table was in the screenshot.
 
 ## Kafka inventory
 
@@ -64,4 +69,4 @@ Request fields, response fields, status codes, and examples for every row are MI
 
 ## Ambiguities
 
-The build brief and the unread portal may disagree. No portal text was available to compare, so no contradiction was resolved.
+The build brief described a bearer token. The portal console uses a cookie named `access_token`. Which transport the bot must use is unresolved. The brief also did not show `GET /portfolio`, `GET /portfolio/cash`, `GET /orders`, or `GET /simulation/clock`; those paths are now taken from the portal page. Kafka message fields are still missing. No contradiction inside the screenshot itself was found.

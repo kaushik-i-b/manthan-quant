@@ -14,6 +14,7 @@ from collections import deque
 from datetime import datetime, timezone
 from typing import Any
 
+from app.api.inventory import local_portal_panel
 from app.config import Settings
 from app.execution.client import ApiError, TradingApiClient
 from app.execution.costs import quote_cost
@@ -1015,6 +1016,7 @@ class TradingRuntime:
         }
 
     def snapshot(self) -> dict[str, Any]:
+        book = self.portfolio_view()
         return {
             "meta": {
                 "project": "MANTHAN QUANT",
@@ -1035,12 +1037,14 @@ class TradingRuntime:
                 "missing_official_docs": [
                     "Hackathon_Problem_Statement.pdf",
                     "Beginners_Guide_to_Trading_and_Investment.pdf",
+                    "portal JSON schemas for the nine documented endpoints",
+                    "bot authentication transport (portal console uses a cookie; bot mechanism is unresolved)",
                 ],
                 "initial_capital": self.settings.initial_capital,
             },
             "health": self.health_view(),
             "lifecycle": self.lifecycle_view(),
-            "portfolio": self.portfolio_view(),
+            "portfolio": book,
             "tickers": self.ticker_rows(),
             "decisions": self.decision_feed(),
             "orders": list(reversed(self.orders))[:80],
@@ -1048,6 +1052,12 @@ class TradingRuntime:
             "audit": list(reversed(self.audit))[:120],
             "milestones": dict(self.milestones),
             "news": self.news_rows(),
+            "portal": local_portal_panel(
+                sim_day=self.sim_day,
+                total_days=self.dataset.days if self.dataset is not None else self.settings.synthetic_days,
+                interval_seconds=self.settings.sim_day_seconds,
+                cash=book["cash"],
+            ),
         }
 
     def candles(self, ticker: str) -> list[dict]:
