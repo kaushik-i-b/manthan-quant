@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8741:8741"
+    env_file:
+      - .env
+    environment:
+      MARKET_MODE: mock
+      DRY_RUN: "true"
+      TRADING_ENABLED: "false"
+  frontend:
+    build: ./frontend
+    ports:
+      - "8742:8742"
+    environment:
+      ENGINE_URL: http://backend:8741
+      CONTROL_TOKEN: dev-control-token
+    depends_on:
+      - backend
